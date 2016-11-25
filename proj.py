@@ -2,6 +2,7 @@ from direct.showbase.ShowBase import ShowBase
 import sys
 import math
 from pandac.PandaModules import WindowProperties
+from direct.gui.OnscreenText import OnscreenText
 props = WindowProperties()
 props.setCursorHidden(True)
 props.setMouseMode(WindowProperties.M_relative)
@@ -17,6 +18,10 @@ class MyApp(ShowBase):
 		self.env = self.loader.loadModel('./models/bvw-f2004--streetscene/street-scene')
 		self.env.reparentTo(self.render)
 		self.env.setPos(-20,20,0)
+		self.call1 = OnscreenText(text = 'Position (Bunny):' , pos = (-.85, .8), scale = .09 , fg = (1,1,1,1))
+		self.call2 = OnscreenText(text = 'Position (Camera):' , pos = (-.85, .7), scale = .09 , fg = (1,1,1,1))
+		self.call3 = OnscreenText(text = 'Rotation (Bunny):' , pos = (-.85, 0.6), scale = .09 , fg = (1,1,1,1))
+		self.call4 = OnscreenText(text = 'Rotation (Camera):' , pos = (-.85, 0.5), scale = .09 , fg = (1,1,1,1))
 
 		self.accept('wheel_up',self.Big)
 		self.accept('wheel_down',self.Little)
@@ -25,6 +30,7 @@ class MyApp(ShowBase):
 
 		taskMgr.add(phys,'time')
 		taskMgr.add(mouse,'mouse')
+		taskMgr.add(texter,'text')
 
 		self.buttons = {key : False for key in 'wsadol976428k;rf'}
 		for key in self.buttons:
@@ -55,7 +61,7 @@ def phys(task):
 	vy,vx = 0,0
 	if z < 0:
 		base.bunny.setZ(0)
-		base.vz = 0.01
+		base.vz = .01
 	if z != 0:
 		base.vz -= .01
 		base.bunny.setZ(base.bunny.getZ() + base.vz)
@@ -67,9 +73,9 @@ def phys(task):
 		vx += .2
 	if base.buttons['a']:
 		vx -= .2
-	if zc < 0.2:
+	if zc < 0:
 		base.camera.setZ(0)
-		camvz = 0.01
+		camvz = .01
 	else:
 		if base.buttons['o']:
 			camvx -= .2*math.sin(h*math.pi/180)
@@ -117,4 +123,15 @@ def mouse(task):
             int(props.getXSize() / 2),
             int(props.getYSize() / 2))
 	return task.cont
+def texter(task):
+	x,y,z = base.bunny.getPos()
+	xc,yc,zc = base.camera.getPos()
+	h,p,r = base.camera.getHpr()
+	hh,pp,rr = base.bunny.getHpr()
+	base.call1.setText('Position (Bunny): %u %i %d' %(x,y,z))
+	base.call2.setText('Position (Camera): %u %i %d' %(xc,yc,zc))
+	base.call3.setText('Rotation (Bunny): %u %i %d' %(h,p,r))
+	base.call4.setText('Rotation (Camera): %u %i %d' %(hh,pp,rr))
+	return task.cont
+
 MyApp().run()
