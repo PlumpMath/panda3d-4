@@ -66,13 +66,17 @@ def phys(task):
 		base.vz -= .01
 		base.bunny.setZ(base.bunny.getZ() + base.vz)
 	if base.buttons['w']:
-		vy += .2
+		vy = -.2*math.cos(hh*math.pi/180)
+		vx = .2*math.sin(hh*math.pi/180)
 	if base.buttons['s']:
-		vy -= .2
+		vy = .2*math.cos(hh*math.pi/180)
+		vx = -.2*math.sin(hh*math.pi/180)
 	if base.buttons['d']:
-		vx += .2
+		vx = -.2*math.cos(hh*math.pi/180)
+		vy = -.2*math.sin(hh*math.pi/180)
 	if base.buttons['a']:
-		vx -= .2
+		vx = .2*math.cos(hh*math.pi/180)
+		vy = .2*math.sin(hh*math.pi/180)
 	if zc < 0:
 		base.camera.setZ(0)
 		camvz = .01
@@ -130,8 +134,8 @@ def texter(task):
 	hh,pp,rr = base.bunny.getHpr()
 	base.call1.setText('Position (Bunny): %u %i %d' %(x,y,z))
 	base.call2.setText('Position (Camera): %u %i %d' %(xc,yc,zc))
-	base.call3.setText('Rotation (Bunny): %u %i %d' %(h,p,r))
-	base.call4.setText('Rotation (Camera): %u %i %d' %(hh,pp,rr))
+	base.call3.setText('Rotation (Bunny): %u %i %d' %(hh,pp,rr))
+	base.call4.setText('Rotation (Camera): %u %i %d' %(h,p,r))
 	return task.cont
 
 MyApp().run()
